@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: Arial;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      /* The browser window */
+      .container {
+        border: 3px solid #f1f1f1;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        overflow: hidden;
+      }
+
+      /* Container for columns and the top "toolbar" */
+      .row {
+        padding: 10px;
+        background: #f1f1f1;
+      }
+
+      /* Create three unequal columns that floats next to each other */
+      .column {
+        float: left;
+      }
+
+      .left {
+        width: 15%;
+      }
+
+      .right {
+        width: 10%;
+      }
+
+      .middle {
+        width: 75%;
+      }
+
+      /* Clear floats after the columns */
+      .row:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      /* Three dots */
+      .dot {
+        margin-top: 4px;
+        height: 12px;
+        width: 12px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      /* Style the input field */
+      input[type="text"] {
+        width: 100%;
+        border-radius: 3px;
+        border: none;
+        background-color: white;
+        margin-top: -8px;
+        height: 25px;
+        color: #666;
+        padding: 5px;
+      }
+
+      /* Three bars (hamburger menu) */
+      .bar {
+        width: 17px;
+        height: 3px;
+        background-color: #aaa;
+        margin: 3px 0;
+        display: block;
+      }
+
+      /* Page content */
+      .content {
+        padding: 10px;
+        height: calc(100vh - 104px);
+      }
+
+      .main-container {
+        display: flex;
+        padding: 10px;
+      }
+      .w-70 {
+        width: 60%;
+        padding: 10px;
+      }
+      .w-30 {
+        width: 40%;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="w-70">
+        <div class="container">
+          <div class="row">
+            <div class="column left">
+              <span class="dot" style="background: #ed594a;"></span>
+              <span class="dot" style="background: #fdd800;"></span>
+              <span class="dot" style="background: #5ac05a;"></span>
+            </div>
+            <div class="column middle">
+              <input type="text" value="http://localhost:5000/" id="mainInput" onchange="mainInputHandler()" />
+            </div>
+            <div class="column right">
+              <div style="float: right;">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="content">
+            <iframe id="mainIframe" src="/" frameBorder="0" style="height: 100%; width: 100%;"></iframe>
+          </div>
+        </div>
+      </div>
+      <div class="w-30">
+        <div class="container">
+          <div class="row">
+            <div class="column left">
+              <span class="dot" style="background: #ed594a;"></span>
+              <span class="dot" style="background: #fdd800;"></span>
+              <span class="dot" style="background: #5ac05a;"></span>
+            </div>
+            <div class="column middle">
+              <input
+                type="text"
+                value="http://localhost:5000/coverage/"
+                style="background: #fafafa;"
+                readonly
+                disabled
+              />
+            </div>
+            <div class="column right">
+              <div style="float: right;">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="content">
+            <iframe id="report" src="/coverage/" frameBorder="0" style="height: 100%; width: 100%;"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        // Main input handler
+        function mainInputHandler() {
+            let val = document.getElementById("mainInput").value;
+            document.getElementById("mainIframe").src = val;
+        }
+        
+
+        // Refresh report
+        window.setInterval(function() {
+            fetch('http://localhost:5000/generateTestCoverage');
+            reloadIFrame()
+        }, 5000);
+        function reloadIFrame() {
+            document.getElementById('report').contentWindow.location.reload();
+        }
+    </script>
+  </body>
+</html>
